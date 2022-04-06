@@ -1,6 +1,6 @@
 baseURL = "https://sctovrp.github.io/showcase.github.io/" 
 languageCode = "en-us"
-title = "Showcase Template"
+title = "Presentación"
 theme = 'book'
 
 # Book configuration

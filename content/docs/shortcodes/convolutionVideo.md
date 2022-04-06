@@ -1,4 +1,4 @@
-# Convolución aplicada a una imagen
+# Convolución aplicada a un video
 
 ## Definición del problema
 
@@ -66,7 +66,7 @@ y_{n1} & y_{n3} & \cdots & y_{mn}\\
 
 ### Difuminado gaussiano
 
-Mediante la implementación de la convolución podemos aplicar efectos a la imagen digital objetivo, en esta ocasión hemos decidido aplicar el difuminado gaussiano. En esta caso, como manejamos dos dimensiones en las operaciones, la formula se describe de la siguiente forma:
+Mediante la implementación de la convolución podemos aplicar efectos a las imágenes digitales objetivos, en esta ocasión hemos decidió aplicar el difuminado gaussiano. En esta caso, como manejamos dos dimensiones en las operaciones, la formula se describe de la siguiente forma:
 
 {{< katex display >}}
 G(x, y) = \dfrac{1}{\sqrt{2 \pi \sigma}}\exp(-\dfrac{x^2 + y^2}{2 \sigma^2})
@@ -88,7 +88,8 @@ Fuente: [Gaussian blur](https://en.wikipedia.org/wiki/Gaussian_blur)
 
 ## Implementación de la convolución
 
-Empezamos por revisar la función que genera el kernel gaussiano, la cual recibe un tamaño del kernel, un sigma y una constante multiplicativa {{< katex >}}k{{< /katex >}}. En esta ocasión los valores serán de 11, 11 y 1 respectivamente. La función se basa en esta [implementación](https://www.geeksforgeeks.org/gaussian-filter-generation-c/).
+Empezamos por revisar la función que genera el kernel gaussiano, la cual recibe un tamaño del kernel, un sigma y una constante multiplicativa k. En esta ocasión los valores serán de 11, 11 y 1 respectivamente. La función se basa en esta [implementación](https://www.geeksforgeeks.org/gaussian-filter-generation-c/).
+
 
 {{< expand >}}
 ```js
@@ -115,60 +116,63 @@ function gaussKernel(size, sigma, k) {
 ```
 {{< /expand >}}
 
-Ahora procedemos a cargar la imagen y preparar la para aplicarle el efecto.
+Ahora procedemos a cargar el video y preparar lo para aplicarle el efecto.
 
 {{< expand >}}
 ```js
-let img;
+let video;
+
 p.preload = function () {
-    img = p.loadImage("../../../1.jpg");
+    video = p.createVideo("../../../fingers.mov");
 }
 
 p.setup = function () {
-    p.createCanvas(700, 500);
-    p.image(img, 0, 0);   
-    gaussFilter();
+    p.createCanvas(320, 240);
+    video.loop();
+    video.hide();
+    p.background(255)
 }
 
 p.draw = function () {
-    p.image(img, 0, 0);
-    img.resize(700, 500);
+    video.pause()
+    gaussFilter();
+    video.loop()
 }
 ```
 {{< /expand >}}
 
-Ahora si, la implementación de la convolución plantea que se deban recorrer cada uno de los píxeles de los canales presentes en la imagen (en este caso, son cuatro: Red, Green, Blue, Alpha) y estos multiplicarlos con los valores que se encuentran en el kernel gaussiano que tengamos creado, para luego de haber hecho esto, se actualicen los valores de la imagen.
+Ahora si, la implementación de la convolución plantea que se deban recorrer cada uno de los píxeles de los canales presentes en la video (en este caso, son cuatro: Red, Green, Blue, Alpha) y estos multiplicarlos con los valores que se encuentran en el kernel gaussiano que tengamos creado, para luego de haber hecho esto, se actualicen los valores de la imagen.
 
-Para esto implementamos una función gaussFilter() que cargue el arreglo de pixeles y los envíe a la función convolution(), para luego poder modificar los valores en la imagen.
+Para esto implementamos una función gaussFilter() que cargue el arreglo de pixeles y los envíe a la función convolution(), para luego poder modificar los valores en la video.
+
+Es importante mencionar que en este caso, el video está siendo procesado frame por frame para seguir con la misma lógica que manejábamos en la implementación a imágenes.
 
 {{< expand >}}
 ```js
 function gaussFilter() {
-    img.loadPixels();
+    video.loadPixels();
+    
     let sigma = 11;
-    let matrix = gaussKernel(11, sigma, 1);
+    let matrix = gaussKernel(11, sigma, 1)
 
-    for (let x = 0; x < img.width; x++) {
-        for (let y = 0; y < img.height; y++) {
-            let c = convolution(x, y, matrix, img);
-            let loc = (y * img.width + x) * 4;
-
-            img.pixels[loc] = p.red(c);
-            img.pixels[loc + 1] = p.green(c);
-            img.pixels[loc + 2] = p.blue(c);
-            img.pixels[loc + 3] = 255; 
+    for (let x = 0; x < p.width; x++) {
+        for (let y = 0; y < p.height; y++) {
+            let c = convolution(x, y, matrix, video);
+            let loc = (y * p.width + x) * 4;
+            p.fill(c)
+            p.stroke(c)
+            p.point(x, y)
         }
     }
-    img.updatePixels();
 }
 ```
 {{< /expand >}}
 
-Ahora en la función convolution(), la cual recibe las posiciones de los arreglos de los pixeles a modificar, el kernel como una matriz y la imagen para poder obtener los valores a retornar de los pixeles ya con el efecto aplicado.
+Ahora en la función convolution(), la cual recibe las posiciones de los arreglos de los pixeles a modificar, el kernel como una matriz y el frame para poder obtener los valores a retornar de los pixeles ya con el efecto aplicado.
 
 {{< expand >}}
 ```js
-function convolution(x, y, matrix, img) {
+function convolution(x, y, matrix, video) {
     let rTotal = 0.0;
     let gTotal = 0.0;
     let bTotal = 0.0;
@@ -178,11 +182,12 @@ function convolution(x, y, matrix, img) {
         for (let j = 0; j < matrix.length; j++) {
             let xloc = (x + i - h);
             let yloc = (y + j - h);
-            let loc = (img.width * yloc + xloc) * 4;
-            if (xloc > 0 && xloc < img.width && yloc > 0 && yloc < img.height) {
-                rTotal += (img.pixels[loc]) * matrix[i][j];
-                gTotal += (img.pixels[loc + 1]) * matrix[i][j];
-                bTotal += (img.pixels[loc + 2]) * matrix[i][j];
+            let loc = (p.width * yloc + xloc) * 4;
+
+            if (xloc > 0 && xloc < p.width && yloc > 0 && yloc < p.height) {
+                rTotal += (video.pixels[loc]) * matrix[i][j];
+                gTotal += (video.pixels[loc + 1]) * matrix[i][j];
+                bTotal += (video.pixels[loc + 2]) * matrix[i][j];
             }
         }
     }
@@ -193,35 +198,11 @@ function convolution(x, y, matrix, img) {
 
 ### Conclusiones y trabajo futuro
 
-Podemos concluir que la aplicación de una máscara a través de la implementación de una convolución sobre una imagen digital es realizable, fácil de comprender matemáticamente, pero que es posible que requiera de una implementación paralela para poder obtener valores de forma más rápida. También es importante recalcar que si la imagen posee una alta calidad, el efecto del difuminado no se aplica del todo bien, lo que nos deja con ventaja en la implementación manual de la convolución al poder graduar por medio de los valores del efecto
+Podemos concluir que la aplicación de una máscara a través de la implementación de una convolución sobre una video a cada uno de los frames es realizable, fácil de comprender matemáticamente, pero que es posible que requiera de una implementación paralela para poder obtener valores de forma más rápida, esto se acentúa más, ya que tiene que renderizar cada uno de los frames modificados y al se una implementación secuencial. 
 
-En futuros trabajos se puede indagar que tan factible es una implementación paralela de esta función mediante p5.js, sin necesidad de entrar directamente a codificar a bajo nivel con lenguajes como c++ y haciendo uso de CUDA.
-
-{{< tabs "convolution" >}}
-
-{{< tab "Imagen base" >}} 
-
-# Imagen sin aplicar efecto
-
-Esta es la imagen sin aplicar ningún efecto, tan solo se redimensionó para efectos de visualización.
-
-![IMAGEN](../../../1.jpg)
-
-{{< /tab >}}
-
-{{< tab "Implementación por hardware" >}} 
-
-# Uso de la función incorporada de p5.js
-
-Aquí podemos apreciar la implementación mediante la función integrada de p5.js
-
-    {{< p5-div sketch="../../../sketches/hardwareConvolution.js" >}}
-{{< /tab >}}
-
-{{< tab "Implementación por software" >}} 
 # Uso de función creada por el estudiante
 Esta implementación de convolución la realizamos de forma secuencial, acá podemos apreciar que con los valores ingresados, el efecto es mucho más notorio, y por lo tanto, es más versátil para permitir graduar acorde el contexto que tan intenso es el efecto.
 
-    {{< p5-div sketch="../../../sketches/softwareConvolution.js" >}}
-{{< /tab >}}
-{{< /tabs >}}
+También recordar que es más lenta la visualización del video y es altamente posible que se demore en renderizar.
+
+{{< p5-div autoplay="true" sketch="../../../sketches/convolutionVideo.js" >}}

@@ -3,7 +3,14 @@ title: Introduction
 type: docs
 ---
 
-# Showcase Template
+# Bienvenido
+
+Bienvenido a la presentación del estudiante Sebastian Camilo Tovar Pedraza.
+
+{{< button relref="/docs/shortcodes/convolution" >}}Convolución aplicada a imagen{{< /button >}}
+{{< button relref="/docs/shortcodes/convolutionVideo" >}}Convolución aplicada a video{{< /button >}}
+
+<!-- # Showcase Template
 
 Welcome to the [gohugo](https://gohugo.io/) template to create rich content [academic reports](https://www.wordy.com/writers-workshop/writing-an-academic-report/) having [p5.js](https://p5js.org/) sketches.
 
@@ -30,4 +37,4 @@ If you forked the repo don't forget to activate the [actions](https://github.com
 
 {{< hint info >}}
 If you changed the repo name don't forget to update all the js related (both sketches and assets) urls.
-{{< /hint >}}
+{{< /hint >}} -->
