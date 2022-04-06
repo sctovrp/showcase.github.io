@@ -191,6 +191,8 @@ function convolution(x, y, matrix, img) {
 ```
 {{< /expand >}}
 
+Fuente: [procesamiento de imagen en p5.js](https://idmnyu.github.io/p5.js-image/)
+
 ### Conclusiones y trabajo futuro
 
 Podemos concluir que la aplicación de una máscara a través de la implementación de una convolución sobre una imagen digital es realizable, fácil de comprender matemáticamente, pero que es posible que requiera de una implementación paralela para poder obtener valores de forma más rápida. También es importante recalcar que si la imagen posee una alta calidad, el efecto del difuminado no se aplica del todo bien, lo que nos deja con ventaja en la implementación manual de la convolución al poder graduar por medio de los valores del efecto
