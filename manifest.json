@@ -1,6 +1,6 @@
 {
-  "name": "Showcase Template",
-  "short_name": "Showcase Template",
+  "name": "Presentación",
+  "short_name": "Presentación",
   "start_url": "/showcase.github.io/",
   "scope": "/showcase.github.io/",
   "display": "standalone",

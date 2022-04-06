@@ -1,39 +1,65 @@
 new p5((p) => {
     let img;
-    let input;
-    let w = 80;
 
-    const matrix = [[-1, -1, -1],
-    [-1, 9, -1],
-    [-1, -1, -1]];
-    let first_time = false
-    p.setup = function () {
-        /* input = p.createFileInput(handleFile); */
-        /* input.position(0, 0); */
+    p.preload = function () {
         img = p.loadImage("../../../1.jpg");
-        img.resize(700, 500);
+    }
 
+    function gaussKernel(size, sigma, k) {
+        let value = 0.0;
+        let kernel = [...Array(size)].map(e => Array(size).fill(value));
+
+        let sum = 0;
+
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                let x = i - (size - 1) / 2.0;
+                let y = j - (size - 1) / 2.0;
+                kernel[i][j] = k * Math.exp(((Math.pow(x, 2) + Math.pow(y, 2)) / ((2 * Math.pow(sigma, 2)))) * (-1));
+                sum += kernel[i][j];
+            }
+        }
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                kernel[i][j] /= sum;
+
+            }
+        }
+        return kernel;
+    }
+
+    p.setup = function () {
         p.createCanvas(700, 500);
-        
-        p.pixelDensity(1);
-        console.log(matrix.length, matrix[0].length)
+        p.image(img, 0, 0);
+        gaussFilter();
     }
     p.draw = function () {
-        /* img.filter(p.GRAY); */
-        img.resize(700, 500);
+        // img.loadPixels();
+        // for(let i = 0; i < img.width * img.height * 4; i+=4){
+        //     for(let j = 0; j < 4; j++){
+        //         if(j != 3)
+        //             img.pixels[i + j] = (img.pixels[i + j]+j) % 255
+        //     }
+        // }
+        // img.updatePixels();
         p.image(img, 0, 0);
-        img.loadPixels();
+        img.resize(700, 500);
+    }
 
-        
+    function gaussFilter() {
+        img.loadPixels();
+        let sigma = 11;
+        let matrix = gaussKernel(11, sigma, 1)
+
         for (let x = 0; x < img.width; x++) {
             for (let y = 0; y < img.height; y++) {
                 let c = convolution(x, y, matrix, img);
-                let loc = (x + y * img.width) * 4;
+                let loc = (y * img.width + x) * 4;
 
                 img.pixels[loc] = p.red(c);
                 img.pixels[loc + 1] = p.green(c);
                 img.pixels[loc + 2] = p.blue(c);
-                img.pixels[loc + 3] = p.alpha(c); 
+                img.pixels[loc + 3] = 255; 
             }
         }
         img.updatePixels();
@@ -49,36 +75,16 @@ new p5((p) => {
             for (let j = 0; j < matrix.length; j++) {
                 let xloc = (x + i - h);
                 let yloc = (y + j - h);
-                let loc = (xloc + img.width * yloc) * 4;
-                loc = p.constrain(loc, 0, img.pixels.length - 1);
+                let loc = (img.width * yloc + xloc) * 4;
 
-                rTotal += (img.pixels[loc]) * matrix[i][j];
-                gTotal += (img.pixels[loc] + 1) * matrix[i][j];
-                bTotal += (img.pixels[loc] + 2) * matrix[i][j];
+                if (xloc > 0 && xloc < img.width && yloc > 0 && yloc < img.height) {
+                    rTotal += (img.pixels[loc]) * matrix[i][j];
+                    gTotal += (img.pixels[loc + 1]) * matrix[i][j];
+                    bTotal += (img.pixels[loc + 2]) * matrix[i][j];
+                }
+
             }
         }
-        rTotal = p.constrain(rTotal, 0, 255);
-        gTotal = p.constrain(rTotal, 0, 255);
-        bTotal = p.constrain(rTotal, 0, 255);
-
         return p.color(rTotal, gTotal, bTotal);
-    }
-
-    /* if (img) {
-            p.background(img);
-            p.image(img, 0, 0);
-            img.filter(GRAY);
-            p.image(img, 0, 0);
-            console.log(img)
-        } else {
-            p.background(0);
-        } */
-
-    function handleFile(file) {
-        if (file.type === 'image') {
-            img = p.createImg(file.data, '');
-        } else {
-            img = null;
-        }
     }
 }, "softwareConvolution");
