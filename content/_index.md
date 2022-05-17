@@ -9,6 +9,7 @@ Bienvenido a la presentación del estudiante Sebastian Camilo Tovar Pedraza.
 
 {{< button relref="/docs/shortcodes/convolution" >}}Convolución aplicada a imagen{{< /button >}}
 {{< button relref="/docs/shortcodes/convolutionVideo" >}}Convolución aplicada a video{{< /button >}}
+{{< button relref="/docs/shortcodes/scenegraph" >}}Grafo de escena{{< /button >}}
 
 <!-- # Showcase Template
 
