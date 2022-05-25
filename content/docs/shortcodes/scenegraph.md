@@ -241,7 +241,7 @@ En trabajos futuros, se propone desarrollar más grafos de escena con otras estr
 
 Esta es la escena descrita anteriormente, los sliders de la izquierda son para aplicar las transformaciones a toda la escena, el de la derecha es para mover el tanque sobre el eje x.
 
-{{< p5-div sketch="../../../sketches/sceneGraph.js" lib2="https://cdn.jsdelivr.net/gh/freshfork/p5.EasyCam@1.2.1/p5.easycam.js" >}}
+{{< p5-div sketch="../../../sketches/sceneGraph.js" lib2="https://cdn.jsdelivr.net/gh/freshfork/p5.EasyCam@1.2.1/p5.easycam.js" style="position: relative;" >}}
 
 Movimiento de la escena / Movimiento del tanque en eje x
 <!-- 

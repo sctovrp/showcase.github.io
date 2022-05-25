@@ -9,6 +9,7 @@ headless: true
 - [Convolution]({{< relref "/docs/shortcodes/convolution" >}})
 - [Convolution Video]({{< relref "/docs/shortcodes/convolutionVideo" >}})
 - [Scene Graph]({{< relref "/docs/shortcodes/scenegraph" >}})
+- [Software Rendering]({{< relref "/docs/shortcodes/softwareRendering" >}})
 <!-- - [Expand]({{< relref "/docs/shortcodes/expand" >}})
 - [Hints]({{< relref "/docs/shortcodes/hints" >}})
 - [Katex]({{< relref "/docs/shortcodes/katex" >}})
