@@ -64,7 +64,7 @@ new p5((p) => {
         
         p.textFont(font, 10);
         // p.textSize(20);
-        video.autoplay();
+        // video.autoplay();
         video.loop();
         // video.hide();
         // define and send filter

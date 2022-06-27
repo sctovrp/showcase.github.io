@@ -223,7 +223,7 @@ void main() {
 
 La implementación anteriormente descrita se encuentra en este lienzo aplicado a una imagen.
 
-{{< p5-div autoplay="true" sketch="../../../sketches/shader2img.js" lib1="../../../sketches/p5.treegl.js" >}}
+{{< p5-div sketch="../../../sketches/shader2img.js" lib1="../../../sketches/p5.treegl.js" >}}
 
 En este lienzo se encuentra la implementación se esta aplicando a un video.
 
