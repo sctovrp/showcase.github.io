@@ -1,7 +1,6 @@
 new p5((p) => {
     let conShader;
     let img;
-    let video;
     let filter;
     let filter2;
     let filter3;
@@ -40,33 +39,26 @@ new p5((p) => {
         p.shader(conShader);
 
         // send img and mask
-        conShader.setUniform('texture', video);
+        conShader.setUniform('texture', img);
         conShader.setUniform('mask', mask);
         conShader.setUniform('maskSharpening', maskSharpening);
 
         // define and send texOffset
-        texOffset = [1 / video.width, 1 / video.height]
+        texOffset = [1 / img.width, 1 / img.height]
         conShader.setUniform('texOffset', texOffset)
     }
 
     p.preload = function () {
         conShader = p.readShader('./../../../sketches/shaders/mask.frag', { varyings: Tree.texcoords2 });
         // image source: https://en.wikipedia.org/wiki/HSL_and_HSV#/media/File:Fire_breathing_2_Luc_Viatour.jpg
-        // img = p.loadImage("../../../2.png");
-        video = p.createVideo("../../../sketches/fingers.mov");
-        font = p.loadFont("https://cdnjs.cloudflare.com/ajax/libs/topcoat/0.8.0/font/SourceCodePro-Bold.otf");
+        img = p.loadImage("../../../1.jpg");
     }
 
     p.setup = function () {
-        p.createCanvas(320, 240, p.WEBGL);
+        p.createCanvas(700, 500, p.WEBGL);
         p.noStroke();
         p.textureMode(p.NORMAL);
         
-        p.textFont(font, 10);
-        // p.textSize(20);
-        video.autoplay();
-        video.loop();
-        // video.hide();
         // define and send filter
         filter = p.createCheckbox('gaussian filter', false);
         filter2 = p.createCheckbox('sharpening filter', false);
@@ -83,7 +75,7 @@ new p5((p) => {
     p.draw = function () {
         p.background(0);
         p.quad(-p.width / 2, -p.height / 2, p.width / 2, -p.height / 2, p.width / 2, p.height / 2, -p.width / 2, p.height / 2);
-        video.loadPixels();
+        
         fragment(mask)
         if (filter.checked()) {
             // create mask
@@ -103,10 +95,8 @@ new p5((p) => {
             }
             mask = newMask;
         }
-        let fr = p.frameRate();
-        p.text( "frame rate: " + fr, -150, -100 );
         // p.textFont('Helvetica');
         // p.text("Frame Count with frameRate " + p.int(p.getFrameRate()), 100, 100);
     }
 
-}, "shader2");
+}, "shader2img");
