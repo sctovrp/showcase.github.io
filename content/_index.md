@@ -7,10 +7,17 @@ type: docs
 
 Bienvenido a la presentación del estudiante Sebastian Camilo Tovar Pedraza.
 
+## Tópicos
+
+### Convolución aplicada de forma secuencial
 {{< button relref="/docs/shortcodes/convolution" >}}Convolución aplicada a imagen{{< /button >}}
 {{< button relref="/docs/shortcodes/convolutionVideo" >}}Convolución aplicada a video{{< /button >}}
+
+### Modelamiento y renderizado
 {{< button relref="/docs/shortcodes/scenegraph" >}}Grafo de escena{{< /button >}}
 {{< button relref="/docs/shortcodes/softwareRendering" >}}Renderizado por software{{< /button >}}
+
+### Shaders
 {{< button relref="/docs/shortcodes/shader1" >}}Ejemplos básicos de shaders{{< /button >}}
 {{< button relref="/docs/shortcodes/shader2" >}}Convolución aplicada en shaders{{< /button >}}
 

@@ -1,8 +1,10 @@
 new p5((p) => {
     let video;
+    let font;
 
     p.preload = function () {
         video = p.createVideo("../../../fingers.mov");
+        font = p.loadFont("https://cdnjs.cloudflare.com/ajax/libs/topcoat/0.8.0/font/SourceCodePro-Bold.otf");
     }
 
     p.setup = function () {
@@ -10,7 +12,8 @@ new p5((p) => {
         console.log(video.size());
         video.loop();
         video.hide();
-        p.background(255)
+        p.background(255);
+        p.textFont(font, 10);
         // p.noStroke();
         // p.fill(0);
 
@@ -19,6 +22,8 @@ new p5((p) => {
     p.draw = function () {
         // video.pause()
         gaussFilter();
+        let fr = p.frameRate();
+        p.text( "frame rate: " + fr, -150, -100 );
         // video.loop()
     }
 
